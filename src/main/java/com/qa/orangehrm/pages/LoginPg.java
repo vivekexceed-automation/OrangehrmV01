@@ -28,7 +28,7 @@ public class LoginPg {
 	private final By password = By.xpath("//input[@name='password']");
 	private final By loginBtn = By.cssSelector("button[type='submit']");
 	private final By forgotPwdLink = By.cssSelector("form.oxd-form > div.orangehrm-login-forgot > p.oxd-text");
-	
+	private final By shop = By.id("sss");	
 	
 	public String getLoginPageHeaderText() {
 		log.info("Getting login page Header");
