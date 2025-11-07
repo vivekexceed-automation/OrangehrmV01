@@ -72,7 +72,7 @@ public class DriverFactory {
 		log.info("env passed ========>"+ envName);
 
 		try {
-			if (envName == null) {
+			if (envName == null || envName.trim().toLowerCase() == "qa") {
 				log.warn("no env is passed, hence running test cases on QA env");
 				io = new FileInputStream("./src/test/resources/config/config.properties");
 			} else {
