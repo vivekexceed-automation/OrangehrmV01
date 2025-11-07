@@ -84,6 +84,10 @@ public class DriverFactory {
 				case "stage":
 					io = new FileInputStream("./src/test/resources/config/config.stage.properties");
 					break;
+					
+				case "dev":
+					io = new FileInputStream("./src/test/resources/config/config.dev.properties");
+					break;
 
 				default:
 					log.error("Invalid env passed, Please pass UAT or no env(default is QA)");
