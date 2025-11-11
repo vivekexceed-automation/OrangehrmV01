@@ -26,15 +26,22 @@
 		</classes>
 	</test>
 
-	<test name="Login Page Test_Edge">
+	<!--<test name="Login Page Test_edge">
 		<parameter name="browser" value="edge" />
 		<classes>
 			<class name="com.qa.orangehrm.test.LoginPgTest" />
 		</classes>
-	</test>
+	</test>-->
 
 	<test name="Dashboard Page Test_Chrome">
 		<parameter name="browser" value="chrome" />
+		<classes>
+			<class name="com.qa.orangehrm.test.DashboardPgTest" />
+		</classes>
+	</test>
+	
+	<test name="Dashboard Page Test_FireFox">
+		<parameter name="browser" value="firefox" />
 		<classes>
 			<class name="com.qa.orangehrm.test.DashboardPgTest" />
 		</classes>

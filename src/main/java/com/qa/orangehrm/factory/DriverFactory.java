@@ -4,17 +4,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 
 import com.qa.orangehrm.errors.AppError;
 import com.qa.orangehrm.exceptions.BrowserException;
@@ -36,16 +39,34 @@ public class DriverFactory {
 		log.info("Entered browser is: " + browserName);
 
 		optionsManager = new OptionsManager(prop);
+		
+		boolean remoteExecution = Boolean.parseBoolean(prop.getProperty("remote"));
 
 		switch (browserName.trim().toLowerCase()) {
 		case "chrome":
-			thLocalDriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+			
+			if(remoteExecution) {
+				init_remoteDriver("chrome");
+			}
+			else {
+				thLocalDriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+			}
 			break;
 		case "firefox":
-			thLocalDriver.set(new FirefoxDriver(optionsManager.getFireFoxOptions()));
+			if(remoteExecution) {
+				init_remoteDriver("firefox");
+			}
+			else {
+				thLocalDriver.set(new FirefoxDriver(optionsManager.getFireFoxOptions()));
+			}
 			break;
 		case "edge":
-			thLocalDriver.set(new EdgeDriver(optionsManager.getEdgeOptions()));
+			if(remoteExecution) {
+				init_remoteDriver("edge");
+			}
+			else {
+				thLocalDriver.set(new EdgeDriver(optionsManager.getEdgeOptions()));
+			}
 			break;
 		default:
 			// System.out.println(AppError.INVALID_BROWSER_ERROR_MESG);
@@ -64,6 +85,34 @@ public class DriverFactory {
 		return thLocalDriver.get();
 	}
 
+	private void init_remoteDriver(String browserName) {
+		log.info("Running tests on selenium grid --"+ browserName);
+		try {
+			switch (browserName) {
+			case "chrome":
+				thLocalDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), optionsManager.getChromeOptions()));
+				break;
+				
+			case "firefox":
+				thLocalDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), optionsManager.getFireFoxOptions()));
+				break;
+				
+			case "edge":
+				thLocalDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), optionsManager.getEdgeOptions()));
+				break;
+				
+			default:
+				log.error("Plz supply the right browser name for selenium grid....");
+				log.error(AppError.INVALID_BROWSER_ERROR_MESG);
+				log.error("Exception occurred while initializing driver: ");
+				throw new BrowserException("=====INVALID BROWSER====");
+			}
+		} 
+		catch (MalformedURLException e) {
+			e.printStackTrace();
+		}
+
+	}
 	public Properties initProp() {
 		prop = new Properties();
 		FileInputStream io = null;

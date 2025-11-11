@@ -33,6 +33,9 @@ public class OptionsManager {
 			log.info("Test cases are running on incognito mode");
 			chOptions.addArguments("--incognito");
 		}
+		if(Boolean.parseBoolean(prop.getProperty("remote"))) {
+			chOptions.setCapability("browserName", "chrome");
+		}
 		return chOptions;
 	}
 
@@ -47,6 +50,9 @@ public class OptionsManager {
 			log.info("Test cases are running on incognito mode");
 			ffOptions.addArguments("--incognito");
 		}
+		if(Boolean.parseBoolean(prop.getProperty("remote"))) {
+			ffOptions.setCapability("browserName", "firefox");
+		}
 		return ffOptions;
 	}
 
@@ -60,6 +66,9 @@ public class OptionsManager {
 		if(Boolean.parseBoolean(prop.getProperty("incognito"))) {
 			log.info("Test cases are running on incognito mode");
 			edOptions.addArguments("--inPrivate");
+		}
+		if(Boolean.parseBoolean(prop.getProperty("remote"))) {
+			edOptions.setCapability("browserName", "edge");
 		}
 		return edOptions;
 	}
